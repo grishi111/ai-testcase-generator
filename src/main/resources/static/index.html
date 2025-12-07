@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Test Case Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="page">
+    <div class="header">
+        <div class="title-group">
+            <h1>AI Test Case Generator</h1>
+            <p>Paste your Jira user story and API specs to generate clean, tabular test cases.</p>
+        </div>
+        <div class="badge">
+            <span class="badge-dot"></span>
+            <span>Powered by Perplexity</span>
+        </div>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Input</div>
+                <div class="card-subtitle">Provide at least a user story or API specification.</div>
+            </div>
+            <div class="pill-row">
+                <div class="pill fade">Step 1 · Input</div>
+                <div class="pill fade">Step 2 · Review</div>
+                <div class="pill fade">Step 3 · Generate</div>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="field-label">
+                <strong>Jira ticket URL (optional)</strong>
+                <span>Paste a Jira issue link like https://your-domain.atlassian.net/browse/KEY-123</span>
+            </div>
+            <input type="text"
+                   id="jiraUrl"
+                   placeholder="https://your-jira-domain/browse/PROJ-123" />
+            <div class="helper-row">
+                <span class="hint">Used as a hint when user story text is empty; can later be used to fetch details from Jira.</span>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="field-label">
+                <strong>User story text</strong>
+                <span>Include full description and acceptance criteria.</span>
+            </div>
+            <textarea id="userStory"
+                      placeholder="As a user, I want to reset my password so that I can regain access...&#10;&#10;Acceptance Criteria:&#10;- ..."></textarea>
+            <div class="helper-row">
+                <span class="hint">Sent as <code>userStoryText</code> to the backend.</span>
+                <span class="chip"><span class="dot"></span> Recommended</span>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="field-label">
+                <strong>API specification (optional)</strong>
+                <span>OpenAPI/Swagger JSON or YAML, or concise API docs.</span>
+            </div>
+            <textarea id="apiSpec"
+                      placeholder="openapi: 3.0.0&#10;paths:&#10;  /password/reset:&#10;    post:&#10;      summary: Reset user password..."></textarea>
+            <div class="helper-row">
+                <span class="hint">Improves mapping between test cases and HTTP endpoints.</span>
+                <span class="chip"><span class="dot"></span> Better coverage</span>
+            </div>
+        </div>
+
+        <div class="btn-row">
+            <div id="status" class="main-status"></div>
+            <button type="button" class="btn btn-secondary" id="clearBtn">Clear</button>
+            <button type="button" class="btn btn-primary" id="generateBtn">
+                <span>Generate test cases</span>
+                <span>➜</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- REQUIREMENT SUMMARY CARD -->
+    <div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Requirement summary</div>
+                <div class="card-subtitle">Quick snapshot of what will be used to generate test cases.</div>
+            </div>
+        </div>
+        <ul class="summary-list" id="summaryList">
+            <li><strong>Jira link:</strong> <span id="summaryJira">Not provided</span></li>
+            <li><strong>User story length:</strong> <span id="summaryStoryLen">0 characters</span></li>
+            <li><strong>API spec length:</strong> <span id="summaryApiLen">0 characters</span></li>
+            <li><strong>Notes:</strong> <span id="summaryNotes">Waiting for input…</span></li>
+        </ul>
+    </div>
+
+    <!-- OUTPUT CARD -->
+    <div class="card">
+        <div class="output-header">
+            <div>
+                <div class="output-title">Generated test cases</div>
+                <div class="output-subtitle">Rendered from Markdown as a clean table for easy review and export.</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span id="exportStatus" class="export-status" style="min-width:0;"></span>
+                <button type="button"
+                        class="btn btn-secondary"
+                        id="exportBtn"
+                        style="display:none; padding:6px 14px; font-size:0.8rem;">
+                    <span>📥 Export to Excel</span>
+                </button>
+            </div>
+        </div>
+        <div id="output" class="output-box">
+            Waiting for input… Paste a user story and optionally API specs, then click “Generate test cases”.
+        </div>
+    </div>
+</div>
+
+<!-- JS libs and app script -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
